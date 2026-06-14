@@ -1,0 +1,69 @@
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+
+#bg {
+  position: fixed;
+  z-index: 0;
+  width: 140vw;
+  height: 140vh;
+  left: -20vw;
+  top: -20vh;
+  background: #aedeff url("bg-street-open-v3.png") center center / cover no-repeat;
+  transition: none;
+  transform-origin: center center;
+  will-change: transform;
+}
+
+#sun-glare {
+  position: fixed;
+  top: -10%;
+  left: -5%;
+  z-index: 1;
+  width: 60vw;
+  height: 60vw;
+  background: radial-gradient(circle, rgba(255, 250, 220, 0.45) 0%, rgba(255, 240, 180, 0.15) 35%, transparent 70%);
+  pointer-events: none;
+}
+
+#scene {
+  position: fixed;
+  inset: 0;
+  z-index: 3;
+  display: block;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+}
+
+main {
+  position: fixed;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+}
+
+#defaultCanvas0 {
+  position: fixed !important;
+  inset: 0;
+  z-index: 4;
+  display: block;
+  width: 100vw !important;
+  height: 100vh !important;
+  pointer-events: none;
+}
+
+body > canvas:not(#scene):not(#defaultCanvas0) {
+  position: absolute !important;
+  left: -10000px !important;
+  top: -10000px !important;
+  width: 1px !important;
+  height: 1px !important;
+  opacity: 0 !important;
+  pointer-events: none;
+  z-index: -1 !important;
+}
