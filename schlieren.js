@@ -18,6 +18,9 @@ let motionTotal = { x: 0, y: 0 };
 const SCHLIERE_SPRITE_REFRESH_FRAMES = 4;
 const SCHLIEREN_ALPHA_MUL = 2.43;
 const SCHLIEREN_THICKNESS_MUL = 0.55;
+const GREY_SCHLIEREN_ALPHA_MUL = 0.32;
+const LIGHT_SCHLIEREN_ALPHA_MUL = 2.35;
+const SHOW_LIGHT_SCHLIEREN_MARKERS = true;
 
 const SCHLIEREN = [
   { x: 0.31, y: 0.34, len: 360, thick: 0.56, curve: 58, angle: -48, alpha: 0.86, seed: 1.7, shape: 'comma', fleckAlpha: 0.72 },
@@ -279,7 +282,7 @@ function drawSchliere(item, index) {
   const x = item.x * window.innerWidth;
   const y = item.y * window.innerHeight;
   const hasAttachedFleck = !item.light && index % 3 !== 2;
-  const alpha = item.alpha * item.visibility * SCHLIEREN_ALPHA_MUL;
+  const alpha = item.alpha * item.visibility * SCHLIEREN_ALPHA_MUL * (item.light ? LIGHT_SCHLIEREN_ALPHA_MUL : GREY_SCHLIEREN_ALPHA_MUL);
   const offsets = item.edge
     ? [[0, 0], [-window.innerWidth, 0], [window.innerWidth, 0], [0, -window.innerHeight], [0, window.innerHeight]]
     : [[0, 0]];
@@ -288,9 +291,19 @@ function drawSchliere(item, index) {
     const point = orbitPoint(x + item.px + ox, y + item.py + oy);
     if (!schliereVisibleAt(item, point.x, point.y)) return;
     drawSchliereSprite(item, alpha, hasAttachedFleck, point.x, point.y, globalOrbitAngle);
+    if (item.light && SHOW_LIGHT_SCHLIEREN_MARKERS) drawLightMarker(point.x, point.y);
   });
 
   // Labels are intentionally disabled for smoother visual testing.
+}
+
+function drawLightMarker(x, y) {
+  ctx.save();
+  ctx.fillStyle = 'rgba(255, 45, 180, 0.92)';
+  ctx.beginPath();
+  ctx.arc(x, y, 3.2, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
 }
 
 function orbitPoint(x, y) {
