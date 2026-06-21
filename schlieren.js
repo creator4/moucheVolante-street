@@ -15,7 +15,9 @@ let targetGlobalOrbitAngle = 0;
 let travelPhase = 0;
 let frameIndex = 0;
 let motionTotal = { x: 0, y: 0 };
+let spriteUpdatesThisFrame = 0;
 const SCHLIERE_SPRITE_REFRESH_FRAMES = 8;
+const SCHLIERE_SPRITE_UPDATE_BUDGET = 5;
 const SCHLIEREN_ALPHA_MUL = 2.43;
 const SCHLIEREN_THICKNESS_MUL = 0.55;
 const GREY_SCHLIEREN_ALPHA_MUL = 0.50;
@@ -405,6 +407,8 @@ function updateSchliereSprite(item, alpha, hasAttachedFleck) {
   const needsSprite = !item.sprite || item.spriteCurlKey !== curlKey;
   if (!needsSprite) return;
   if (item.sprite && frameIndex < item.nextSpriteFrame) return;
+  if (item.sprite && spriteUpdatesThisFrame >= SCHLIERE_SPRITE_UPDATE_BUDGET) return;
+  spriteUpdatesThisFrame++;
 
   const bounds = schliereLocalBounds(item, hasAttachedFleck);
   const sprite = item.sprite || document.createElement('canvas');
@@ -666,6 +670,7 @@ function drawDiffuseCloud(alpha, size) {
 }
 
 function draw() {
+  spriteUpdatesThisFrame = 0;
   ctx = mainCtx;
   ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
   ELEMENTE.forEach(drawElement);
